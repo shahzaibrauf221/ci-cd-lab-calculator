@@ -1,0 +1,173 @@
+# ============================================
+# CI/CD LAB - COMPLETE CMD COMMANDS GUIDE
+# ============================================
+# Follow these commands step by step in your CMD/Terminal
+# Replace YOUR_USERNAME and YOUR_REPO_NAME with your actual values
+
+# ============================================
+# STEP 1: INITIAL SETUP (Run only once)
+# ============================================
+
+# First, create a new repository on GitHub:
+# 1. Go to https://github.com/new
+# 2. Name it: ci-cd-lab-calculator
+# 3. Keep it Public
+# 4. DON'T initialize with README (we have our own)
+# 5. Click "Create repository"
+
+# ============================================
+# STEP 2: NAVIGATE TO PROJECT FOLDER
+# ============================================
+
+cd ci-cd-lab-calculator
+
+# ============================================
+# STEP 3: INITIALIZE GIT & PUSH
+# ============================================
+
+git init
+git add .
+git commit -m "Initial commit: CI/CD lab setup with calculator"
+git branch -M main
+git remote add origin https://github.com/YOUR_USERNAME/ci-cd-lab-calculator.git
+git push -u origin main
+
+# ============================================
+# STEP 4: VERIFY CI PIPELINE
+# ============================================
+
+# Go to GitHub > Your Repo > Actions tab
+# You should see "Python CI Pipeline" running
+# Wait for it to complete with green checkmark ✅
+
+# ============================================
+# STEP 5: TEST HAPPY PATH (Add a comment)
+# ============================================
+
+# Open src/calculator.py in any editor
+# Add this comment at the top: # Happy path test
+# Then run:
+
+git add .
+git commit -m "Happy path: Added comment to test CI"
+git push
+
+# Check Actions tab - should pass ✅
+
+# ============================================
+# STEP 6: BREAK THE BUILD (Introduce bug)
+# ============================================
+
+# Edit src/calculator.py
+# Change: return x + y
+# To:     return x - y
+# Then run:
+
+git add .
+git commit -m "Breaking the build intentionally"
+git push
+
+# Check Actions tab - should FAIL ❌
+# Click on the failed run to see which test failed
+
+# ============================================
+# STEP 7: FIX THE BUILD
+# ============================================
+
+# Edit src/calculator.py
+# Change back: return x - y
+# To:          return x + y
+# Then run:
+
+git add .
+git commit -m "Fixed the bug - add function restored"
+git push
+
+# Check Actions tab - should pass ✅ again
+
+# ============================================
+# STEP 8: CREATE FIRST RELEASE (CD - v1.0)
+# ============================================
+
+git tag v1.0
+git push origin v1.0
+
+# Go to Actions tab - see "Continuous Delivery" workflow
+# Go to main repo page - check "Releases" in sidebar
+# Click v1.0 - download the .tar.gz file
+
+# ============================================
+# STEP 9: TEST CD SAFETY NET
+# ============================================
+
+# Edit src/calculator.py
+# Change: return x + y
+# To:     return x * 99
+# Then run:
+
+git add .
+git commit -m "Attempting to ship broken code"
+git tag v1.1
+git push origin main
+git push origin v1.1
+
+# CD pipeline should FAIL at "Sanity Check" ❌
+
+# ============================================
+# STEP 10: FIX AND RELEASE v1.2
+# ============================================
+
+# Edit src/calculator.py
+# Change back: return x * 99
+# To:          return x + y
+# Then run:
+
+git add .
+git commit -m "Fixed bug - releasing v1.2"
+git tag v1.2
+git push origin main
+git push origin v1.2
+
+# Check Releases - v1.2 should be available ✅
+
+# ============================================
+# USEFUL GIT COMMANDS
+# ============================================
+
+# Check status
+git status
+
+# View all tags
+git tag
+
+# Delete a local tag
+git tag -d v1.1
+
+# Delete a remote tag
+git push origin --delete v1.1
+
+# View commit history
+git log --oneline
+
+# View all branches
+git branch -a
+
+# ============================================
+# TROUBLESHOOTING
+# ============================================
+
+# If push fails with "Permission denied":
+# - Check your GitHub credentials
+# - Use: git config --global credential.helper store
+
+# If remote already exists:
+git remote remove origin
+git remote add origin https://github.com/YOUR_USERNAME/ci-cd-lab-calculator.git
+
+# If branch issues:
+git branch -M main
+git push -u origin main --force
+
+# ============================================
+# END OF COMMANDS GUIDE
+# ============================================
